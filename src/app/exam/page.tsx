@@ -2,13 +2,12 @@
 import Link from "next/link";
 import { useState } from "react";
 import { auth, db } from "@/firebaseConfig";
-import { doc, setDoc, getDoc, Timestamp } from "firebase/firestore";
+import { doc, setDoc, Timestamp } from "firebase/firestore";
 
 export default function ExamPage() {
   const [score, setScore] = useState<number | null>(null);
 
   const handleSubmit = async () => {
-    // Fake score để test, sau này tính thật
     const newScore = Math.floor(Math.random() * 100);
     setScore(newScore);
 

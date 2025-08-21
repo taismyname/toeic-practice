@@ -1,11 +1,11 @@
 "use client";
 import { auth, provider } from "@/firebaseConfig";
-import { signInWithPopup, signOut } from "firebase/auth";
-import { useState, useEffect } from "react";
+import { signInWithPopup, signOut, User } from "firebase/auth";
+import { useState } from "react";
 import Link from "next/link";
 
 export default function Page() {
-  const [user, setUser] = useState<any>(null);
+  const [user, setUser] = useState<null | User>(null);
 
   const handleLogin = async () => {
     try {
