@@ -1,49 +1,65 @@
 "use client";
-import { auth, provider } from "@/firebaseConfig";
-import { signInWithPopup, signOut, User } from "firebase/auth";
-import { useState } from "react";
 import Link from "next/link";
+import { useEffect, useState } from "react";
+import { auth, provider } from "@/firebaseConfig";
+import { signInWithPopup, signOut } from "firebase/auth";
 
-export default function Page() {
-  const [user, setUser] = useState<null | User>(null);
+export default function HomePage() {
+  const [user, setUser] = useState<any>(null);
+
+  useEffect(() => {
+    const unsubscribe = auth.onAuthStateChanged((u) => setUser(u));
+    return () => unsubscribe();
+  }, []);
 
   const handleLogin = async () => {
     try {
-      const result = await signInWithPopup(auth, provider);
-      setUser(result.user);
+      await signInWithPopup(auth, provider);
     } catch (err) {
       console.error(err);
     }
   };
 
-  const handleLogout = () => {
-    signOut(auth);
-    setUser(null);
+  const handleLogout = async () => {
+    await signOut(auth);
   };
 
   return (
-    <div className="space-y-6">
+    <div className="flex flex-col items-center justify-center min-h-screen space-y-8 px-4">
+      <h1 className="text-5xl font-bold text-blue-800 text-center">
+        Trang luyện đề TOEIC
+      </h1>
+
       {user ? (
-        <div className="space-y-3">
-          <p>Xin chào, {user.displayName}</p>
-          <button
-            onClick={handleLogout}
-            className="px-4 py-2 border rounded-lg hover:bg-slate-100"
-          >
-            Đăng xuất
-          </button>
-          <div>
-            <Link href="/exam" className="px-4 py-2 bg-black text-white rounded-lg hover:opacity-90">
+        <div className="space-y-4 text-center">
+          <p className="text-lg">Xin chào, {user.displayName}</p>
+          <div className="space-x-4">
+            <Link
+              href="/exam"
+              className="px-6 py-3 bg-blue-600 text-white rounded-lg font-semibold hover:bg-blue-700"
+            >
               Bắt đầu làm đề
             </Link>
+            <button
+              onClick={handleLogout}
+              className="px-6 py-3 bg-red-500 text-white rounded-lg font-semibold hover:bg-red-600"
+            >
+              Đăng xuất
+            </button>
           </div>
+          <Link
+            href="/results"
+            className="inline-block mt-2 text-blue-700 underline"
+          >
+            Xem kết quả
+          </Link>
         </div>
       ) : (
         <button
           onClick={handleLogin}
-          className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:opacity-90"
+          className="px-8 py-3 bg-blue-600 text-white rounded-lg font-semibold hover:bg-blue-700"
         >
-          Đăng nhập Google
+          Đăng nhập bằng Google
         </button>
       )}
     </div>

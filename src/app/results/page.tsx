@@ -22,7 +22,6 @@ export default function ResultsPage() {
       }
 
       const resultsRef = collection(db, "results");
-      // Lấy tất cả doc có field "uid" = auth.currentUser.uid, sắp xếp mới nhất
       const q = query(
         resultsRef,
         where("uid", "==", auth.currentUser.uid),
@@ -43,40 +42,48 @@ export default function ResultsPage() {
   }, []);
 
   return (
-    <div className="space-y-4">
-      <h1 className="text-2xl font-semibold">Lịch sử kết quả</h1>
+    <div className="max-w-3xl mx-auto p-6 space-y-6">
+      <h1 className="text-3xl font-bold text-center text-blue-800">
+        Lịch sử kết quả
+      </h1>
+
       {loading ? (
-        <p>Đang tải dữ liệu...</p>
+        <p className="text-center">Đang tải dữ liệu...</p>
       ) : auth.currentUser ? (
         results.length > 0 ? (
-          <table className="table-auto border-collapse border border-slate-300 w-full">
-            <thead>
-              <tr className="bg-slate-200">
-                <th className="border border-slate-300 px-4 py-2">Ngày</th>
-                <th className="border border-slate-300 px-4 py-2">Điểm</th>
+          <table className="table-auto w-full border-collapse border border-gray-300 shadow-sm">
+            <thead className="bg-blue-100">
+              <tr>
+                <th className="border px-4 py-2">Ngày</th>
+                <th className="border px-4 py-2">Điểm</th>
               </tr>
             </thead>
             <tbody>
               {results.map((r, idx) => (
-                <tr key={idx} className="hover:bg-slate-100">
-                  <td className="border border-slate-300 px-4 py-2">
+                <tr key={idx} className="hover:bg-blue-50">
+                  <td className="border px-4 py-2">
                     {r.timestamp?.toDate().toLocaleString()}
                   </td>
-                  <td className="border border-slate-300 px-4 py-2">{r.score}</td>
+                  <td className="border px-4 py-2">{r.score}</td>
                 </tr>
               ))}
             </tbody>
           </table>
         ) : (
-          <p>Chưa có kết quả nào.</p>
+          <p className="text-center">Chưa có kết quả nào.</p>
         )
       ) : (
-        <p>Vui lòng đăng nhập để xem kết quả.</p>
+        <p className="text-center">Vui lòng đăng nhập để xem kết quả.</p>
       )}
 
-      <Link href="/" className="inline-block rounded-xl border px-3 py-2 hover:bg-white">
-        ← Về trang chủ
-      </Link>
+      <div className="text-center">
+        <Link
+          href="/"
+          className="text-gray-700 underline"
+        >
+          ← Về trang chủ
+        </Link>
+      </div>
     </div>
   );
 }
